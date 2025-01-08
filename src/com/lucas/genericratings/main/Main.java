@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lucas.genericratings.details.Title;
 import com.lucas.genericratings.details.TitleOMDB;
+import com.lucas.genericratings.profile.AverageRating;
 import com.lucas.genericratings.profile.TimeWatched;
 
 import java.io.FileWriter;
@@ -22,8 +23,10 @@ public class Main {
         //so that the program can easily get the information within TitleOMDB without needing @SerializedName
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).setPrettyPrinting().create();
         String read = "";
+
         List<Title> arrayTitle= new ArrayList<>();
         TimeWatched calc = new TimeWatched();
+        AverageRating avr = new AverageRating();
 
         while (!read.equals("9")) {
             Scanner input = new Scanner(System.in);
@@ -34,6 +37,7 @@ public class Main {
 
             if (read.equals("9")){
                 System.out.println("total watch time: " + calc.getSumTime());
+                System.out.println("average of ratings: " + avr.getSumRatings()/avr.getAverage());
                 break;
             }
             HttpClient client = HttpClient.newHttpClient();
@@ -41,7 +45,6 @@ public class Main {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             //for now catching exceptions since the API has missing info on some movies. ex: into the spiderverse length
-            //band-aid fix by transforming the data on Title into a proper string which i did
             try {
                 System.out.println(response.body());
                 TitleOMDB temp = gson.fromJson(response.body(), TitleOMDB.class);
@@ -49,6 +52,7 @@ public class Main {
                 arrayTitle.add(realTitle);
                 System.out.println(realTitle);
                 calc.calcTime(realTitle);
+                avr.calcRat(realTitle);
             } catch (NumberFormatException error) {
                 System.out.println("found an error withing the OMDB database: " + error.getMessage());
 

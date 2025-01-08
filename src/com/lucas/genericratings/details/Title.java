@@ -5,16 +5,16 @@ public class Title implements Comparable<Title>{
     private String titleName;
     private int length;
     private int releaseDate;
-    private String dateYear;
+    private String dateOngoing;
     private boolean isSub;
-    private double averageRating;
+    private double rating;
     private double totalRating;
 
     public Title(TitleOMDB actualTitle) {
         this.titleName = actualTitle.title();
-        this.dateYear = actualTitle.year();
+        this.dateOngoing = actualTitle.year();
         this.length = Integer.valueOf(actualTitle.runtime().substring(0,2));
-        this.averageRating = actualTitle.metascore();
+        this.rating = actualTitle.metascore();
         this.totalRating = actualTitle.imdbVotes();
     }
 
@@ -68,8 +68,8 @@ public class Title implements Comparable<Title>{
         return totalRating;
 
     }
-    public double getAverageRating(){
-        return averageRating;
+    public double getRating(){
+        return rating;
 
     }
 
@@ -79,8 +79,8 @@ public class Title implements Comparable<Title>{
         return
                 "name= " + titleName + '\'' +
                 ", length= " + length + " min." +
-                ", release date= " + dateYear +
-                ", Rating=" + averageRating +
+                ", release date= " + dateOngoing +
+                ", Rating=" + rating +
                 '}';
     }
 }
